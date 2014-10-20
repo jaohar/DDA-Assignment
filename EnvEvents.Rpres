@@ -1,0 +1,69 @@
+Health and Environmental Consequences of Environmental Events
+========================================================
+author: Jonathan O'Hara
+date: 20th October 2014
+
+Synopsis
+========================================================
+
+This shiny application aims to address two questions:
+<ol>
+<li>Across the United States, which types of events are most harmful with respect to population health?</li>
+<li>Across the United States,which types of events have the greatest economic consequences?</li>
+</ol>
+
+- Use the ComboBox to select between charts of consequences for: Human Fatalities, Human Injuries, and Property Damage.
+- Overall, wind and thunderstorms appear to be the most harmful environmental events for both population health and economic consequences.
+
+```{r, echo=FALSE}
+setwd("/Users/jonathan/Desktop/Coursera 2014/_DDP Assignment/")
+HF <- read.csv("HF.csv")
+HI <- read.csv("HI.csv")
+PD <- read.csv("PD.csv")
+
+#Limit dates to after 1980
+HF <- HF[HF$Year > 1980, ]
+HI <- HI[HI$Year > 1980, ]
+PD <- PD[PD$Year > 1980, ]
+
+displot <- function(a, b, maxnum) {
+  plot(main = paste(b, "due to Environmental Events"),
+       x = 1:nrow(a), y = a$RAIN_HAIL, type = "n", xlab = "Number of Years",
+       ylab = b, ylim=c(0,maxnum))
+       with(a, lines(x = 1:nrow(a), y = RAIN_HAIL, col = "red", lwd=5))
+       with(a, lines(x = 1:nrow(a), y = SUMMER_HEAT, col = "navy blue", lwd=5))
+       with(a, lines(x = 1:nrow(a), y = TORNADO, col = "green", lwd=5))
+       with(a, lines(x = 1:nrow(a), y = WIND_STORM, col = "orange", lwd=5))
+       with(a, lines(x = 1:nrow(a), y = WINTER_SNOW, col = "purple", lwd=5))
+       legend('topleft', names(a)[-1],
+         legend = c("Rail/Hail","Summer/Heat","Tornado","Wind/Storms","Winter/Snow"),
+         lty = 1, col = c('red', 'navy blue', 'green',' orange', 'purple'),
+         bty='n', cex=1 , lwd=5)
+}
+```
+
+Human Fatalities
+========================================================
+
+- Wind and storms were the leading cause of fatalities caused by environmental events.
+- Summer and heat were the second greatest cause of fatalities.
+```{r, echo=FALSE}
+displot(HF, "Human Fatalities", 120)
+```
+
+
+Human Injuries
+========================================================
+
+- Wind and thunderstorms were responsible for more injuries than any other environmental effect year after year since data on wind and thunderstorms has been collected.
+```{r, echo=FALSE}
+displot(HI, "Human Injuries", 500)
+```
+
+Property Damage
+========================================================
+
+- Of all environmental effects, wind and thunder storms were found to be the primary source of property damage.
+```{r, echo=FALSE}
+displot(PD, "Property Damage($)", 15000)
+```
